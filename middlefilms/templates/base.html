@@ -1,0 +1,35 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="" rel="stylesheet" id="theme-link">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <script>
+        a = localStorage.getItem('Dark')
+        link = document.getElementById('theme-link')
+        if (a === 'True') {
+            link.setAttribute("href", "{% static 'css/dark.css' %}");
+        }
+        let darkTheme = "{% static 'css/dark.css' %}";
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&display=swap"
+          rel="stylesheet">
+    <title>{% block title %}MiddleFilms бесплатные фильмы HD{% endblock %}</title>
+</head>
+{% include 'inc/_header.html' %}
+
+{% block content %}
+
+{% endblock %}
+{% include 'inc/_footer.html' %}
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<ul class="navbar-nav me-auto mb-lg-0 menu">
+    <li class="nav-item">
+        <a class="nav-link" aria-current="page" href="{% url 'show_films' %}">Фильмы</a>
+        <ul class="{{ class }}">
+            <li><a href="{% url 'show_films' %}">Все</a></li>
+            <li><a href="{% url 'show_films' %}?year=2022">Новинки</a></li>
+            <p>По годам:</p>
+            <li><a href="{% url 'show_films' %}?year=2022">2022</a></li>
+            <li><a href="{% url 'show_films' %}?year=2021">2021</a></li>
+            <li><a href="{% url 'show_films' %}?year=2020">2020</a></li>
+            <li><a href="{% url 'show_films' %}?year=2019">2019</a></li>
+            <p>По жанрам:</p>
+            {% for genre_title, genre_url in genres_films %}
+                <li><a href="{% url 'show_films' %}{{ genre_url }}">{{ genre_title }}</a></li>
+            {% endfor %}
+        </ul>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'show_serials' %}">Сериалы</a>
+        <ul class="{{ class }}">
+            <li><a href="{% url 'show_serials' %}">Все</a></li>
+            <li><a href="{% url 'show_serials' %}?year=2022">Новинки</a></li>
+            <p>По годам:</p>
+            <li><a href="{% url 'show_serials' %}?year=2022">2022</a></li>
+            <li><a href="{% url 'show_serials' %}?year=2021">2021</a></li>
+            <li><a href="{% url 'show_serials' %}?year=2020">2020</a></li>
+            <li><a href="{% url 'show_serials' %}?year=2019">2019</a></li>
+            <p>По жанрам:</p>
+            {% for genre_title, genre_url in genres_serials %}
+                <li><a href="{% url 'show_serials' %}{{ genre_url }}">{{ genre_title }}</a></li>
+            {% endfor %}
+        </ul>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'show_mults' %}">Мультфильмы</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'random_film' %}">Случайный фильм</a>
+    </li>
+</ul>

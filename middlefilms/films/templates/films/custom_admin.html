@@ -1,0 +1,89 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+
+{% block title %}Админка{% endblock %}
+
+{% block extrastyle %}{{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+        <a href="{% url 'admin:index' %}">Админка</a>
+    </div>
+{% endblock %}
+
+{% block content %}
+    Добавление фильмов
+    <form action="{% url 'custom_admin' %}" method="post">
+        {% csrf_token %}
+        <label>Колличество фильмов</label>
+        <input type="text" name="count-films">
+        <button type="submit">Отправить</button>
+    </form>
+    {{ content_main | safe }}
+    <br>
+    Требуют внимания:
+    <br>
+    Нет продюсера({{ errors_producer.count }}):
+    <form action="" method="post" name="producer">
+        <button type="submit">Очистить</button>
+    </form>
+    <div class="mb-4"></div>
+    <div class="chap-obj">
+        {% for film in errors_producer %}
+            <div class="item col-lg-2 col-xl-2 col-md-3 col-sm-4 col-6">
+                <a href="/admin/films/films/{{ film.id }}/change/">
+                    <div class="item-img"
+                         style="background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%), url('{{ film.poster.url }}') center no-repeat;background-size: cover;">
+                        <div class="item-text">
+                            <div class="item-title">{{ film.title }} ({{ film.year }})</div>
+                            <div class="item-rating">
+                                <div class="item-kp"><span class="kp">KP</span> {{ film.rating_kp }}</div>
+                                <div class="item-imdb"><span class="imdb">IMDB</span> {{ film.rating_imdb }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="play-hov">
+                        <i class="bi bi-play-circle-fill"></i>
+                    </div>
+                </a>
+            </div>
+        {% empty %}
+            <h2>Нет результатов</h2>
+        {% endfor %}
+    </div>
+    <br>
+    Нет актёров({{ errors_actors.count }}):
+    <form action="" method="post" name="actors">
+        <button type="submit">Очистить</button>
+    </form>
+    <div class="mb-4"></div>
+    <div class="chap-obj">
+        {% for film in errors_actors %}
+            <div class="item col-lg-2 col-xl-2 col-md-3 col-sm-4 col-6">
+                <a href="/admin/films/films/{{ film.id }}/change/">
+                    <div class="item-img"
+                         style="background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%), url('{{ film.poster.url }}') center no-repeat;background-size: cover;">
+                        <div class="item-text">
+                            <div class="item-title">{{ film.title }} ({{ film.year }})</div>
+                            <div class="item-rating">
+                                <div class="item-kp"><span class="kp">KP</span> {{ film.rating_kp }}</div>
+                                <div class="item-imdb"><span class="imdb">IMDB</span> {{ film.rating_imdb }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="play-hov">
+                        <i class="bi bi-play-circle-fill"></i>
+                    </div>
+                </a>
+            </div>
+        {% empty %}
+            <h2>Нет результатов</h2>
+        {% endfor %}
+    </div>
+    {{ block.super }}
+{% endblock %}

@@ -1,0 +1,81 @@
+{% load static %}
+{% load menu %}
+<body>
+<div class="header">
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'img/logo.png' %}" alt="logo" width="40px">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+                    aria-controls="offcanvasNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                {% show_menu 'submenu' %}
+                <form class="d-flex search d-lg-none">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-search" placeholder="Поиск" aria-label="Username"
+                               aria-describedby="basic-addon1">
+                        <button class="input-group-text span-search" id="basic-addon1"><i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
+                <div class="search-drop d-none d-md-none d-xl-block d-lg-block d-sm-none" onclick="viewSearch()">
+                    <button class="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+                <div class="dark-light">
+                    <div class="switch-btn"></div>
+                </div>
+                <div class="login">
+                    <a href="login.html" class="btn login-btn">Войти</a>
+                </div>
+            </div>
+            <div class="offcanvas offcanvas-start canvas-menu" id="offcanvasNavbar" tabindex="-1"
+                 aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasResponsiveLabel">Меню</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+                            data-bs-target="#offcanvasResponsive" aria-label="Close"></button>
+                </div>
+                <form action="{% url 'search_films' %}" method="get" class="d-flex search d-lg-none">
+                    <div class="input-group">
+                        <input name="search" type="text" class="form-control input-search" placeholder="Поиск" aria-label="Username"
+                               aria-describedby="basic-addon1">
+                        <button class="input-group-text span-search" id="basic-addon1"><i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
+                {% show_menu 'submenu-mobile' %}
+                <div class="search-drop d-none d-md-none d-xl-block d-lg-block d-sm-none" onclick="viewSearch()">
+                    <button class="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+                <div class="dark-light">
+                    <div class="switch-btn"></div>
+                </div>
+                <div class="login">
+                    <a href="#" class="btn login-btn">Войти</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="popup-search d-none d-md-none d-xl-block d-lg-block d-sm-none" id="popup-search"
+         style="display: none !important;">
+        <div class="popup-body">
+            <div class="close" onclick="closeSearch()"><i class="bi bi-x-square "></i></div>
+            <form action="{% url 'search_films' %}" method="get" class="d-flex search">
+                <div class="input-group">
+                    <input id="search_input" name="search" type="text" class="form-control input-search" placeholder="Поиск" aria-label="Username"
+                           aria-describedby="basic-addon1">
+                    <button class="input-group-text span-search" id="basic-addon1"><i class="bi bi-search"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

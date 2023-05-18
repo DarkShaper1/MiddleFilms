@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+
+    {{ title }} — {{ block.super }}
+
+{% endblock %}
+
+{% block content %}
+    <div class="main-content">
+        <div class="container">
+            <div class="chap-btns">
+                <span class="chap-title">{{ title }} ({{ films_count }})</span>
+            </div>
+            <div class="filter">
+                <form class="main-filter" action="" method="get">
+                    <select name="order" id="sort-select">
+                        <option value="" {% if order_get == '' %} selected {% endif %}>По дате</option>
+                        <option value="-rating_kp" {% if order_get == '-rating_kp' %} selected {% endif %}>По рейтингу</option>
+                        <option value="-views" {% if order_get == '-views' %} selected {% endif %}>По популярности</option>
+                        <option value="-created_at" {% if order_get == '-created_at' %} selected {% endif %}>По добавлению</option>
+                        <option value="title" {% if order_get == 'title' %} selected {% endif %}>По алфавиту</option>
+                    </select>
+                    <select name="year" id="year-select">
+                        <option value="">Год</option>
+                        {% for year in years %}
+                            <option value="{{ year }}" {% if year_get == year %} selected {% endif %}>{{ year }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="country" id="year-select">
+                        <option value="">Страна</option>
+                        {% for country_title, country_slug in countries %}
+                            <option value="{{ country_slug }}" {% if country_get == country_slug %} selected {% endif %}>{{ country_title }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="rating" id="rating-select">
+                        <option value="" {% if rating_get == '' %} selected {% endif %}>Рейтинг</option>
+                        <option value="8" {% if rating_get == '8' %} selected {% endif %}>от 8</option>
+                        <option value="7" {% if rating_get == '7' %} selected {% endif %}>от 7</option>
+                        <option value="6" {% if rating_get == '6' %} selected {% endif %}>от 6</option>
+                        <option value="5" {% if rating_get == '5' %} selected {% endif %}>от 5</option>
+                        <option value="4" {% if rating_get == '4' %} selected {% endif %}>от 4</option>
+                        <option value="3" {% if rating_get == '3' %} selected {% endif %}>от 3</option>
+                        <option value="2" {% if rating_get == '2' %} selected {% endif %}>от 2</option>
+                        <option value="1" {% if rating_get == '1' %} selected {% endif %}>от 1</option>
+                    </select>
+                    <button class="filter-btn" type="submit">Применить</button>
+                </form>
+            </div>
+            <div class="chap-obj">
+                {% for film in films %}
+                    <div class="item col-lg-2 col-xl-2 col-md-3 col-sm-4 col-6">
+                        <a href="{{ film.get_absolute_url }}">
+                            <div class="item-img"
+                                 style="background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%), url('{{ film.poster.url }}') center no-repeat;background-size: cover;">
+                                <div class="item-text">
+                                    <div class="item-title">{{ film.title }} ({{ film.year }})</div>
+                                    <div class="item-rating">
+                                        <div class="item-kp"><span class="kp">KP</span> {{ film.rating_kp }}</div>
+                                        <div class="item-imdb"><span class="imdb">IMDB</span> {{ film.rating_imdb }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="play-hov">
+                                <i class="bi bi-play-circle-fill"></i>
+                            </div>
+                        </a>
+                    </div>
+                {% empty %}
+                    <h2>Нет результатов</h2>
+                {% endfor %}
+            </div>
+            {% if page_count > 1 %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        {% if films.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?{{ get_params }}&page={{ films.previous_page_number }}"
+                                   aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                        {% for p in films.paginator.page_range %}
+                            {% if films.number == p %}
+                                <li class="page-item active"><a class="page-link" href="?{{ get_params }}&page={{ p }}">{{ p }}</a></li>
+                            {% elif p > films.number|add:-4 and p < films.number|add:4 %}
+                                <li class="page-item"><a class="page-link" href="?{{ get_params }}&page={{ p }}">{{ p }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if films.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?{{ get_params }}&page={{ films.next_page_number }}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

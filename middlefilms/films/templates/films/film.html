@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+
+    {{ film.title }} — {{ block.super }}
+
+{% endblock %}
+
+{% block content %}
+    <div class="main-content">
+        <div class="container">
+            <div class="breads">
+                <a href="{% url 'home' %}">Главная</a> » <a href="/{{ film.type.slug }}">{{ film.type.title }}ы</a> » <span>{{ film.title }} ({{ film.year }})</span>
+            </div>
+            <div class="row">
+                <div class="film-img col-lg-3 col-md-4">
+                    <img src="{{ film.poster.url }}" width="100%" alt="">
+                    <div class="btn favorite-btn"><i class="bi bi-heart"></i>В закладки</div>
+                    <div class="rating-count">
+                        <div class="rating rating2">
+                            <p onclick="set_rating('{{ film.id }}', 5)" id="star-5" title="Give 5 stars"><i class="bi bi-star-fill"></i></p>
+                            <p onclick="set_rating('{{ film.id }}', 4)" id="star-4" title="Give 4 stars"><i class="bi bi-star-fill"></i></p>
+                            <p onclick="set_rating('{{ film.id }}', 3)" id="star-3" title="Give 3 stars"><i class="bi bi-star-fill"></i></p>
+                            <p onclick="set_rating('{{ film.id }}', 2)" id="star-2" title="Give 2 stars"><i class="bi bi-star-fill"></i></p>
+                            <p onclick="set_rating('{{ film.id }}', 1)" id="star-1" title="Give 1 star"><i class="bi bi-star-fill"></i></p>
+                        </div>
+                        <div id="rating-number">
+                            {{ rating }}
+                        </div>
+                    </div>
+                <div class="your-rating">
+                    {% if your_rating %}
+                        Ваша оценка: {{ your_rating }}
+                    {% endif %}
+                </div>
+                </div>
+                <div class="film-desc col-lg-9 col-md-8">
+                    <h1>{{ film.title }} ({{ film.year }}) смотреть онлайн</h1>
+                    <h2>{{ film.title_original }}</h2>
+                    <p class="min-desc"><span class="desc-title">Страна: </span>
+                    {% if film.type.title == 'Сериал' %}
+                            {% for c in film.country.all %}
+                                {% if c == film.country.last %}
+                                    <a href="{% url 'show_serials' %}?country={{ c.slug }}">{{ c.title }}</a>
+                            {% else %}
+                                    <a href="{% url 'show_serials' %}?country={{ c.slug }}">{{ c.title }}</a>,
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            {% for c in film.country.all %}
+                                {% if c == film.country.last %}
+                                    <a href="{% url 'show_films' %}?country={{ c.slug }}">{{ c.title }}</a>
+                            {% else %}
+                                    <a href="{% url 'show_films' %}?country={{ c.slug }}">{{ c.title }}</a>,
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </p>
+                    <p class="min-desc"><span class="desc-title">Год выхода: </span>{{ film.year }}</p>
+                    <p class="min-desc"><span class="desc-title">Время: </span>{{ film.time }}</p>
+                    {% if film.age_restriction != 0 %}
+                        <p class="min-desc"><span class="desc-title">Возраст: </span>{{ film.age_restriction }}+</p>
+                    {% endif %}
+                    <p class="min-desc"><span class="desc-title">Жанр: </span>
+                        {% if film.type.title == 'Сериал' %}
+                            {% for genre in film.genres.all %}
+                                {% if genre == film.genres.last %}
+                                    <a href="{{ genre.get_absolute_url_serial }}">{{ genre.title }}</a>
+                                {% else %}
+                                    <a href="{{ genre.get_absolute_url_serial }}">{{ genre.title }}</a>,
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            {% for genre in film.genres.all %}
+                                {% if genre == film.genres.last %}
+                                    <a href="{{ genre.get_absolute_url_film }}">{{ genre.title }}</a>
+                                {% else %}
+                                    <a href="{{ genre.get_absolute_url_film }}">{{ genre.title }}</a>,
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </p>
+                    <p class="min-desc"><span class="desc-title">Режиссёр: </span>
+                        {% if film.produser != '' %}
+                            {{ film.produser }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </p>
+                    <p class="min-desc"><span class="desc-title">Актеры: </span>
+                        {% if film.actors != '' %}
+                            {{ film.actors }} и другие
+                        {% else %}
+                            -
+                        {% endif %}
+                    </p>
+                    <hr>
+                    <h3>{{ film.title }} ({{ film.type.title }}, {{ film.year }}) смотреть онлайн бесплатно</h3>
+                    <p class="full-desc">{{ film.description }}</p>
+                    <div class="desc-rating">
+                        <div class="desc-kp">KP {{ film.rating_kp }}</div>
+                        <div class="desc-imdb">IMDB {{ film.rating_imdb }}</div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="player">
+                <div class="player-title">
+                    <h2>Смотреть {{ film.title }} в HD 720-1080 хорошем качестве</h2>
+                </div>
+                    <iframe id="player1" src="https://376.svetacdn.in/fv7zu1fzwHaV?kp_id={{ film.kinopoisk_id }}" frameborder="0"
+                        allowfullscreen></iframe>
+                <div id="player2" style="display: none;">
+                    <div id="yohoho" class="iframe" data-kinopoisk="{{ film.kinopoisk_id }}"></div>
+                </div>
+                <div class="player-bottom">
+                    <a href="javascript:show_player1()" id="show_player1" class="active">Смотреть</a>
+                    <a href="javascript:show_player2()" id="show_player2" data-ahoy="yohoho">Плеер 2</a>
+                    <script src="//yohoho.cc/yo.js"></script>
+                    <span class="social d-none d-sm-block">
+                      <script src="https://yastatic.net/share2/share.js"></script>
+                      <div class="ya-share2" data-curtain
+                           data-services="vkontakte,odnoklassniki,telegram,twitter"></div>
+                    </span>
+                    <span class="report">
+                      <i class="bi bi-exclamation-triangle-fill"></i>
+                    </span>
+                </div>
+                <div class="social-mobile d-sm-none">
+                    <script src="https://yastatic.net/share2/share.js"></script>
+                    <div class="ya-share2" data-curtain data-services="vkontakte,odnoklassniki,telegram,twitter"></div>
+                </div>
+            </div>
+            <div class="block-comments">
+                <div class="row">
+                    <div class="comments col-lg-7 col-md-7">
+                        <h3>Комментарии:</h3>
+                        {% for comment in comments %}
+                            <div class="one-comment">
+                            <span class="avatar">Д</span>
+                            <div class="comment-body">
+                                <div class="comment-head">
+                                    <div class="name">{{ comment.user.get_username }}</div>
+                                    <div class="comment-date">{{ comment.created_at }}</div>
+                                </div>
+                                <p class="comment-text">
+                                    {{ comment.content }}
+                                </p>
+                                <div class="like-dis">
+                                    <i class="bi bi-hand-thumbs-up-fill"></i>
+                                    <span>+7</span>
+                                    <i class="bi bi-hand-thumbs-down-fill"></i>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                            Нет комментариев
+                        {% endfor %}
+                    </div>
+                    <div class="write-comments col-lg-5 col-md-5">
+                        <h3>Оставить комментарий:</h3>
+                        {% if form %}
+                        <div class="mb-3">
+                        <form id="comment_form" action="{% url 'add_comment' film.id %}" method="post">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="btn btn-primary mb-3 send-comment">Отправить</button>
+                        </form>
+                        </div>
+                        {% else %}
+                            <p>Только авторизированные пользователи могут оставлять комментарии</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="recomend">
+                <h3>Рекомендации:</h3>
+                <div class="chap-obj">
+                    {% for rec in recs %}
+                        <div class="item col-lg-2 col-xl-2 col-md-4 col-sm-4 col-6">
+                            <a href="{{ rec.get_absolute_url }}">
+                                <div class="item-img"
+                                     style="background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%), url('{{ rec.poster.url }}') center no-repeat;background-size: cover;">
+                                    <div class="item-text">
+                                        <div class="item-title">{{ rec.title }} ({{ rec.year }})</div>
+                                        <div class="item-rating">
+                                            <div class="item-kp"><span class="kp">KP</span> {{ rec.rating_kp }}</div>
+                                            <div class="item-imdb"><span class="imdb">IMDB</span> {{ rec.rating_imdb }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="play-hov">
+                                    <i class="bi bi-play-circle-fill"></i>
+                                </div>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
